@@ -17,18 +17,18 @@ function display_sync_interface() {
         wd_last_sync_error = result.wd_last_sync_error;
         wd_gd_sync_enabled = result.wd_gd_sync_enabled;
         wd_last_sync = result.wd_last_sync;
-        if (!wd_gd_sync_enabled) {
-            document.getElementById("gdStopSyncButton").style.display = 'none';
-            document.getElementById("syncStatusFeedback").style.display = 'none';
-            return;
-        }
-        document.getElementById("gdStopSyncButton").style.display = 'inline-block';
-        document.getElementById("syncStatusFeedback").style.display = 'inline';
-        if (wd_last_sync_error != null) {
-            document.getElementById("syncStatusFeedback").textContent = 'Error: ' + wd_last_sync_error;
-        } else {
-            document.getElementById("syncStatusFeedback").textContent = "Synchronized.";
-        }
+        // if (!wd_gd_sync_enabled) {
+        //     document.getElementById("gdStopSyncButton").style.display = 'none';
+        //     document.getElementById("syncStatusFeedback").style.display = 'none';
+        //     return;
+        // }
+        // document.getElementById("gdStopSyncButton").style.display = 'inline-block';
+        // document.getElementById("syncStatusFeedback").style.display = 'inline';
+        // if (wd_last_sync_error != null) {
+        //     document.getElementById("syncStatusFeedback").textContent = 'Error: ' + wd_last_sync_error;
+        // } else {
+        //     document.getElementById("syncStatusFeedback").textContent = "Synchronized.";
+        // }
         if (typeof wd_last_sync !== 'undefined') {
             var cur_date = new Date();
             var seconds_passed = (cur_date.getTime() - wd_last_sync) / 1000;
@@ -209,41 +209,41 @@ function process_delete_old_dict(e) {
 
 function show_user_dicts() {
     var dicts_block = document.getElementById("existingDictsBlock");
-    while (dicts_block.firstChild) {
-        dicts_block.removeChild(dicts_block.firstChild);
-    }
+    // while (dicts_block.firstChild) {
+    //     dicts_block.removeChild(dicts_block.firstChild);
+    // }
     var dictPairs = wd_online_dicts;
     for (var i = 0; i < dictPairs.length; ++i) {
-        var nameSpan = document.createElement('span');
-        nameSpan.setAttribute('class', 'existingDictName');
-        nameSpan.textContent = dictPairs[i].title;
-        dicts_block.appendChild(nameSpan);
+        // var nameSpan = document.createElement('span');
+        // nameSpan.setAttribute('class', 'existingDictName');
+        // nameSpan.textContent = dictPairs[i].title;
+        // dicts_block.appendChild(nameSpan);
 
-        var urlInput = document.createElement('input');
-        urlInput.setAttribute('type', 'text');
-        urlInput.setAttribute('class', 'existingDictUrl');
-        urlInput.setAttribute('value', dictPairs[i].url);
-        urlInput.readOnly = true;
-        dicts_block.appendChild(urlInput);
+        // var urlInput = document.createElement('input');
+        // urlInput.setAttribute('type', 'text');
+        // urlInput.setAttribute('class', 'existingDictUrl');
+        // urlInput.setAttribute('value', dictPairs[i].url);
+        // urlInput.readOnly = true;
+        // dicts_block.appendChild(urlInput);
 
-        var testButton = document.createElement('button');
-        testButton.setAttribute('class', 'shortButton');
-        testButton.id = 'testDictBtn_' + i;
-        testButton.textContent = 'Test';
-        testButton.addEventListener("click", process_test_old_dict);
-        dicts_block.appendChild(testButton);
+        // var testButton = document.createElement('button');
+        // testButton.setAttribute('class', 'shortButton');
+        // testButton.id = 'testDictBtn_' + i;
+        // testButton.textContent = 'Test';
+        // testButton.addEventListener("click", process_test_old_dict);
+        // dicts_block.appendChild(testButton);
 
-        var deleteButton = document.createElement('button');
-        deleteButton.setAttribute('class', 'imgButton');
-        deleteButton.id = 'delDictBtn_' + i;
-        var img = document.createElement("img");
-        img.setAttribute("src", "delete.png");
-        img.id = 'delDictImg_' + i;
-        deleteButton.appendChild(img);
-        deleteButton.addEventListener("click", process_delete_old_dict);
-        dicts_block.appendChild(deleteButton);
+        // var deleteButton = document.createElement('button');
+        // deleteButton.setAttribute('class', 'imgButton');
+        // deleteButton.id = 'delDictBtn_' + i;
+        // var img = document.createElement("img");
+        // img.setAttribute("src", "delete.png");
+        // img.id = 'delDictImg_' + i;
+        // deleteButton.appendChild(img);
+        // deleteButton.addEventListener("click", process_delete_old_dict);
+        // dicts_block.appendChild(deleteButton);
 
-        dicts_block.appendChild(document.createElement("br"));
+        // dicts_block.appendChild(document.createElement("br"));
     }
 }
 
@@ -267,7 +267,7 @@ function show_internal_state() {
     document.getElementById("wordsColor").checked = word_hl_params.useColor;
     document.getElementById("idiomsColor").checked = idiom_hl_params.useColor;
 
-    document.getElementById("pronunciationEnabled").checked = wd_enable_tts;
+    // document.getElementById("pronunciationEnabled").checked = wd_enable_tts;
 
     document.getElementById("wcRadioBlock").style.display = word_hl_params.useColor ? "block" : "none";
     show_rb_states(wc_rb_ids, word_hl_params.color);
@@ -278,13 +278,13 @@ function show_internal_state() {
     document.getElementById("ibRadioBlock").style.display = idiom_hl_params.useBackground ? "block" : "none";
     show_rb_states(ib_rb_ids, idiom_hl_params.backgroundColor);
 
-    for (var t = 0; t < target_types.length; t++) {
-        ttype = target_types[t];
-        for (var i = 0; i < hover_popup_types.length; i++) {
-            is_hit = (hover_popup_types[i] == wd_hover_settings[ttype + "_hover"])
-            document.getElementById(ttype + "b_" + hover_popup_types[i]).checked = is_hit;
-        }
-    }
+    // for (var t = 0; t < target_types.length; t++) {
+    //     ttype = target_types[t];
+    //     for (var i = 0; i < hover_popup_types.length; i++) {
+    //         is_hit = (hover_popup_types[i] == wd_hover_settings[ttype + "_hover"])
+    //         document.getElementById(ttype + "b_" + hover_popup_types[i]).checked = is_hit;
+    //     }
+    // }
 
     highlight_example_text(word_hl_params, "wordHlText", "wql", "wqr");
     highlight_example_text(idiom_hl_params, "idiomHlText", "iql", "iqr");
@@ -390,14 +390,14 @@ function process_display() {
             add_cb_event_listener("wordsColor", wd_hl_settings.wordParams, "useColor");
             add_cb_event_listener("idiomsColor", wd_hl_settings.idiomParams, "useColor");
 
-            add_hover_rb_listeners();
+            // add_hover_rb_listeners();
 
             if (wd_developer_mode) {
                 document.getElementById("debugControl").style.display = 'block';
             }
 
-            document.getElementById("gdSyncButton").addEventListener("click", request_permissions_and_sync);
-            document.getElementById("gdStopSyncButton").addEventListener("click", stop_synchronization);
+            // document.getElementById("gdSyncButton").addEventListener("click", request_permissions_and_sync);
+            // document.getElementById("gdStopSyncButton").addEventListener("click", stop_synchronization);
 
             document.getElementById("saveVocab").addEventListener("click", process_export);
             document.getElementById("loadVocab").addEventListener("click", process_import);
@@ -407,26 +407,26 @@ function process_display() {
 
             document.getElementById("testManifestWarningsBtn").addEventListener("click", process_test_warnings);
 
-            document.getElementById("addDict").addEventListener("click", process_add_dict);
-            document.getElementById("testNewDict").addEventListener("click", process_test_new_dict);
+            // document.getElementById("addDict").addEventListener("click", process_add_dict);
+            // document.getElementById("testNewDict").addEventListener("click", process_test_new_dict);
 
-            document.getElementById("moreInfoLink").href = chrome.extension.getURL('sync_help.html');
+            // document.getElementById("moreInfoLink").href = chrome.extension.getURL('sync_help.html');
 
             document.getElementById("saveVisuals").addEventListener("click", function () {
                 chrome.storage.local.set({'wd_hl_settings': wd_hl_settings});
             });
 
-            document.getElementById("defaultDicts").addEventListener("click", function () {
-                wd_online_dicts = make_default_online_dicts();
-                chrome.storage.local.set({"wd_online_dicts": wd_online_dicts});
-                initContextMenus(wd_online_dicts);
-                show_user_dicts();
-            });
+            // document.getElementById("defaultDicts").addEventListener("click", function () {
+            //     wd_online_dicts = make_default_online_dicts();
+            //     chrome.storage.local.set({"wd_online_dicts": wd_online_dicts});
+            //     initContextMenus(wd_online_dicts);
+            //     show_user_dicts();
+            // });
 
-            document.getElementById("pronunciationEnabled").addEventListener("click", function (e) {
-                wd_enable_tts = e.target.checked;
-                chrome.storage.local.set({"wd_enable_tts": wd_enable_tts});
-            });
+            // document.getElementById("pronunciationEnabled").addEventListener("click", function (e) {
+            //     wd_enable_tts = e.target.checked;
+            //     chrome.storage.local.set({"wd_enable_tts": wd_enable_tts});
+            // });
 
             display_sync_interface();
             show_internal_state();

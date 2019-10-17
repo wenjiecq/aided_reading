@@ -52,21 +52,15 @@ function process_change() {
 
 function process_submit() {
     //TODO add a radio button with two options: 1. merge vocabulary [default]; 2. replace vocabulary
-    var inputElem = document.getElementById("doLoadVocab");
-    var file = inputElem.files[0];
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        var new_words = parse_vocabulary(reader.result);
-        add_new_words(new_words);
-    }
-    reader.readAsText(file);
+    var customElem = document.getElementById("customVocab");
+    var new_words = parse_vocabulary(customElem.value);
+    add_new_words(new_words);
 }
 
 function init_controls() {
     window.onload=function() {
         localizeHtmlPage();
         document.getElementById("vocabSubmit").addEventListener("click", process_submit);
-        document.getElementById("doLoadVocab").addEventListener("change", process_change);
     }
 }
 

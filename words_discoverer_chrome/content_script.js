@@ -400,31 +400,6 @@ function create_bubble() {
     });
     bubbleDOM.appendChild(addButton);
 
-    var speakButton = document.createElement('button');
-    speakButton.setAttribute('class', 'wdAddButton');
-    speakButton.textContent = 'Audio';
-    speakButton.style.marginBottom = "4px";
-    speakButton.addEventListener("click", function () {
-        bubble_handle_tts(current_lexeme);
-    });
-    bubbleDOM.appendChild(speakButton);
-
-    //dictPairs = makeDictionaryPairs();
-    var dictPairs = wd_online_dicts;
-    for (var i = 0; i < dictPairs.length; ++i) {
-        var dictButton = document.createElement('button');
-        dictButton.setAttribute('class', 'wdAddButton');
-        dictButton.textContent = dictPairs[i].title;
-        dictButton.setAttribute('wdDictRefUrl', dictPairs[i].url);
-        dictButton.addEventListener("click", function (e) {
-            target = e.target;
-            dictUrl = target.getAttribute('wdDictRefUrl');
-            var newTabUrl = get_dict_definition_url(dictUrl, current_lexeme);
-            chrome.runtime.sendMessage({wdm_new_tab_url: newTabUrl});
-        });
-        bubbleDOM.appendChild(dictButton);
-    }
-
     bubbleDOM.addEventListener('mouseleave', function (e) {
         bubbleDOM.wdMouseOn = false;
         hideBubble(false);
