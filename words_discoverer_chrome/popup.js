@@ -2,12 +2,14 @@ var dict_size = null;
 var enabled_mode = true;
 
 
+
 function display_mode() {
     chrome.tabs.getSelected(null, function (tab) {
         var url = new URL(tab.url);
         var domain = url.hostname;
         document.getElementById("addHostName").textContent = domain;
         if (enabled_mode) {
+            display_modal_fun();
             document.getElementById("modeHeader").textContent = chrome.i18n.getMessage("enabledDescription");
             document.getElementById("addToListLabel").textContent = chrome.i18n.getMessage("addSkippedLabel");
             document.getElementById("addToListLabel").href = chrome.extension.getURL('black_list.html');
@@ -120,6 +122,47 @@ function process_rate(increase) {
     });
 }
 
+function process_display0() {
+    var check_system = document.getElementById("displaySystem").checked;
+    chrome.storage.local.set({"check_system": check_system});
+    display_modal_fun()
+}
+
+function process_display1() {
+    var check_custom = document.getElementById("displayCustom").checked;
+    chrome.storage.local.set({"check_custom": check_custom});
+    display_modal_fun()
+}
+
+function display_modal_fun(){
+    chrome.storage.local.get(["check_system"],function (result) {
+        var checked = result.check_system;
+        document.getElementById("displaySystem").checked = checked;
+        if(typeof checked === "undefined"){
+            chrome.storage.local.set({"check_system": true});
+            document.getElementById("displaySystem").checked = true;
+        }else if(checked){
+            document.getElementById("displayModal").style.display =  "block";
+            document.getElementById("displaySystem").checked = true;
+        }else{
+            document.getElementById("displayModal").style.display =  "none";
+            document.getElementById("displaySystem").checked = false;
+        }
+    });
+
+    chrome.storage.local.get(["check_custom"],function (result) {
+        var checked = result.check_custom;
+        if(typeof checked === "undefined"){
+            chrome.storage.local.set({"check_custom": true});
+        }else if(checked){
+            document.getElementById("displayCustom").checked = true;
+        }else{
+            document.getElementById("displayCustom").checked = false;
+        }
+    });
+
+}
+
 function process_rate_m1() {
     process_rate(-1);
 }
@@ -147,6 +190,8 @@ function init_controls() {
         document.getElementById("showVocab").addEventListener("click", process_show);
         document.getElementById("getHelp").addEventListener("click", process_help);
         document.getElementById("addWord").addEventListener("click", process_add_word);
+        document.getElementById("displaySystem").addEventListener("click", process_display0);
+        document.getElementById("displayCustom").addEventListener("click", process_display1);
         document.getElementById("rateM10").addEventListener("click", process_rate_m10);
         document.getElementById("rateM1").addEventListener("click", process_rate_m1);
         document.getElementById("rateP1").addEventListener("click", process_rate_p1);

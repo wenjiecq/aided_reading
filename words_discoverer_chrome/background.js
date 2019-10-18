@@ -448,6 +448,9 @@ function initialize_extension() {
         load_idioms();
         wd_hl_settings = result.wd_hl_settings;
         if (typeof wd_hl_settings == 'undefined') {
+            system_hl_params = {
+              system: true,
+            };
             word_hl_params = {
                 enabled: true,
                 quoted: false,

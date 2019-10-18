@@ -62,7 +62,11 @@ function add_lexeme(lexeme, result_handler) {
                 key = wf;
             }
         }
-
+        // TODO system is not delete
+        // ifkey.indexOf(" ") != -1){
+        //     key = " ";
+        // };
+        key = key.trim();
         if (user_vocabulary.hasOwnProperty(key)) {
             result_handler("exists", key);
             return;

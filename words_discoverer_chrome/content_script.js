@@ -21,6 +21,8 @@ var word_re = new RegExp("^[a-z][a-z]*$");
 var function_key_is_pressed = false;
 var rendered_node_id = null;
 var node_to_render_id = null;
+var check_system = null;
+var check_custom = null;
 
 function make_class_name(lemma) {
     if (lemma) {
@@ -29,9 +31,15 @@ function make_class_name(lemma) {
     return 'wdautohl_none_none';
 }
 
-function get_rare_lemma(word) {
-    if (word.length < 3)
+/**
+ * 单词是否存在在单词列表中
+ * @param word
+ * @returns {undefined}
+ */
+function get_rare_lemma_system(word) {
+    if (word.length < 3){
         return undefined;
+    }
     var wf = undefined;
     if (dict_words.hasOwnProperty(word)) {
         wf = dict_words[word];
@@ -40,6 +48,16 @@ function get_rare_lemma(word) {
         return undefined;
     lemma = wf[0];
     return (!user_vocabulary || !(user_vocabulary.hasOwnProperty(lemma))) ? lemma : undefined;
+}
+
+function get_rare_lemma_custom(word) {
+    if (word.length < 3){
+        return undefined;
+    }
+    if (user_vocabulary.hasOwnProperty(word)){
+        return word;
+    }
+    return undefined;
 }
 
 
@@ -203,7 +221,16 @@ function text_to_hl_nodes(text, dst) {
             }
         }
         if (!match && wd_hl_settings.wordParams.enabled) {
-            lemma = get_rare_lemma(tokens[wnum]);
+            var lemma = undefined;
+            if(check_system && check_custom){
+
+            }
+            if(check_system){
+                lemma = get_rare_lemma_system(tokens[wnum]);
+            }
+            if(check_custom && !lemma){
+                lemma = get_rare_lemma_custom(tokens[wnum]);
+            }
             if (lemma) {
                 match = {normalized: lemma, kind: "lemma", begin: ibegin, end: ibegin + tokens[wnum].length};
                 ibegin += tokens[wnum].length + 1;
@@ -396,9 +423,45 @@ function create_bubble() {
     addButton.textContent = chrome.i18n.getMessage("menuItem");
     addButton.style.marginBottom = "4px";
     addButton.addEventListener("click", function () {
-        add_lexeme(current_lexeme, bubble_handle_add_result);
+        if(user_vocabulary.hasOwnProperty(current_lexeme)){
+            var list_name = 'wd_user_vocabulary';
+            chrome.storage.local.get([list_name], function(result) {
+                var user_list = result.wd_user_vocabulary;
+                delete user_list[current_lexeme];
+                chrome.storage.local.set({[list_name]: user_list});
+            });
+            unhighlight(current_lexeme);
+        }else{
+            add_lexeme(current_lexeme, bubble_handle_add_result);
+        }
+
     });
     bubbleDOM.appendChild(addButton);
+
+    // var speakButton = document.createElement('button');
+    // speakButton.setAttribute('class', 'wdAddButton');
+    // speakButton.textContent = 'Audio';
+    // speakButton.style.marginBottom = "4px";
+    // speakButton.addEventListener("click", function () {
+    //     bubble_handle_tts(current_lexeme);
+    // });
+    // bubbleDOM.appendChild(speakButton);
+
+    //dictPairs = makeDictionaryPairs();
+    var dictPairs = wd_online_dicts;
+    for (var i = 0; i < dictPairs.length; ++i) {
+        var dictButton = document.createElement('button');
+        dictButton.setAttribute('class', 'wdAddButton');
+        dictButton.textContent = dictPairs[i].title;
+        dictButton.setAttribute('wdDictRefUrl', dictPairs[i].url);
+        dictButton.addEventListener("click", function (e) {
+            target = e.target;
+            dictUrl = target.getAttribute('wdDictRefUrl');
+            var newTabUrl = get_dict_definition_url(dictUrl, current_lexeme);
+            chrome.runtime.sendMessage({wdm_new_tab_url: newTabUrl});
+        });
+        bubbleDOM.appendChild(dictButton);
+    }
 
     bubbleDOM.addEventListener('mouseleave', function (e) {
         bubbleDOM.wdMouseOn = false;
@@ -486,6 +549,27 @@ function initForPage() {
             });
 
         });
+    });
+
+    chrome.storage.local.get(["check_system"],function (result) {
+        var checked = result.check_system;
+        if(typeof checked === "undefined"){
+            chrome.storage.local.set({"check_system": true});
+            check_system = true;
+        }else{
+            check_system = checked;
+            check_custom = result.check_custom;
+        }
+    });
+
+    chrome.storage.local.get(["check_custom"],function (result) {
+        var checked = result.check_custom;
+        if(typeof checked === "undefined"){
+            chrome.storage.local.set({"check_custom": true});
+            check_custom = true;
+        }else{
+            check_custom = checked;
+        }
     });
 }
 
